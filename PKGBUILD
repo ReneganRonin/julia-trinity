@@ -3,6 +3,7 @@ pkgname=julia-trinity
 _pkgbase=julia
 pkgver=20210305
 pkgrel=1
+pkgdesc='High-level, high-performance, dynamic programming language - official binaries of Stable, RC, and Nightly'
 arch=('x86_64')
 provides=(julia-trinity)
 conflicts=(julia julia-git julia-nightly-bin julia-bin julia-beta-bin)
