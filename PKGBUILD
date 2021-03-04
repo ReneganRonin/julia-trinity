@@ -1,6 +1,6 @@
 # Maintainer: ReneganRonin <renegan.ronin@gmail.com>
-pkgname=julia-trinity
-_pkgbase=julia
+_name=julia
+pkgname=${_name}-trinity
 pkgver=20210305
 pkgrel=1
 pkgdesc='High-level, high-performance, dynamic programming language - official binaries of Stable, RC, and Nightly'
@@ -9,18 +9,18 @@ provides=(julia-trinity)
 conflicts=(julia julia-git julia-nightly-bin julia-bin julia-beta-bin)
 url='https://julialang.org/'
 licenses=('MIT')
-source=("https://julialang-s3.julialang.org/bin/linux/x64/1.5/$_pkgbase-1.5.3-linux-x86_64.tar.gz"
-        "https://julialang-s3.julialang.org/bin/linux/x64/1.6/$_pkgbase-1.6.0-rc1-linux-x86_64.tar.gz"
-        "https://julialangnightlies-s3.julialang.org/bin/linux/x64/$_pkgbase-latest-linux64.tar.gz"
+source=("https://julialang-s3.julialang.org/bin/linux/x64/1.5/$_name-1.5.3-linux-x86_64.tar.gz"
+        "https://julialang-s3.julialang.org/bin/linux/x64/1.6/$_name-1.6.0-rc1-linux-x86_64.tar.gz"
+        "https://julialangnightlies-s3.julialang.org/bin/linux/x64/$_name-latest-linux64.tar.gz"
 16x16.png::https://github.com/JuliaLang/julia/raw/master/contrib/mac/frameworkapp/JuliaLauncher/Assets.xcassets/AppIcon.appiconset/16.png
 32x32.png::https://github.com/JuliaLang/julia/raw/master/contrib/mac/frameworkapp/JuliaLauncher/Assets.xcassets/AppIcon.appiconset/32.png
 128x128.png::https://github.com/JuliaLang/julia/raw/master/contrib/mac/frameworkapp/JuliaLauncher/Assets.xcassets/AppIcon.appiconset/128.png
 256x256.png::https://github.com/JuliaLang/julia/raw/master/contrib/mac/frameworkapp/JuliaLauncher/Assets.xcassets/AppIcon.appiconset/256.png
 512x512.png::https://github.com/JuliaLang/julia/raw/master/contrib/mac/frameworkapp/JuliaLauncher/Assets.xcassets/AppIcon.appiconset/512.png)
 noextract=(
-"$_pkgbase-1.5.3-linux-x86_64.tar.gz"
-"$_pkgbase-1.6.0-rc1-linux-x86_64.tar.gz"
-"$_pkgbase-latest-linux64.tar.gz"
+"$_name-1.5.3-linux-x86_64.tar.gz"
+"$_name-1.6.0-rc1-linux-x86_64.tar.gz"
+"$_name-latest-linux64.tar.gz"
     )
 sha256sums=('f190c938dd6fed97021953240523c9db448ec0a6760b574afd4e9924ab5615f1'
             '72847bd2b4d4db9d5970512f79fd5a7f76ad56cf0f2ea5a80eff032364b19c8b'
@@ -40,36 +40,36 @@ prepare() {
   mkdir -p juliast  # stable
   mkdir -p juliarc  # release candidate
   mkdir -p juliant    # for nightly
-  tar -zxvf $_pkgbase-1.5.3-linux-x86_64.tar.gz -C juliast --strip-components=1  
-  tar -zxvf $_pkgbase-1.6.0-rc1-linux-x86_64.tar.gz -C juliarc --strip-components=1
-  tar -zxvf $_pkgbase-latest-linux64.tar.gz -C juliant --strip-components=1
+  tar -zxvf $_name-1.5.3-linux-x86_64.tar.gz -C juliast --strip-components=1  
+  tar -zxvf $_name-1.6.0-rc1-linux-x86_64.tar.gz -C juliarc --strip-components=1
+  tar -zxvf $_name-latest-linux64.tar.gz -C juliant --strip-components=1
 }
 
 package() {
 
   mkdir -p ${pkgdir}/usr/bin/
-  ln -s $srcdir/${_pkgbase}st/bin/julia ${pkgdir}/usr/bin/juliast
-  ln -s $srcdir/${_pkgbase}rc/bin/julia ${pkgdir}/usr/bin/juliarc
-  ln -s $srcdir/${_pkgbase}nt/bin/julia ${pkgdir}/usr/bin/juliant
+  ln -s $srcdir/${_name}st/bin/julia ${pkgdir}/usr/bin/juliast
+  ln -s $srcdir/${_name}rc/bin/julia ${pkgdir}/usr/bin/juliarc
+  ln -s $srcdir/${_name}nt/bin/julia ${pkgdir}/usr/bin/juliant
 
-  cd $srcdir/${_pkgbase}nt
-  mkdir -p ${pkgdir}/usr/share/licenses/${_pkgbase}
+  cd $srcdir/${_name}nt
+  mkdir -p ${pkgdir}/usr/share/licenses/${_name}
   install -Dm644 LICENSE.md \
-    ${pkgdir}/usr/share/licenses/${_pkgbase}/LICENSE.md
+    ${pkgdir}/usr/share/licenses/${_name}/LICENSE.md
 
-  sed -i '2s/Julia/Julia\ Stable/g' $srcdir/${_pkgbase}st/share/applications/julia.desktop
-  sed -i '2s/Julia/Julia\ RC/g' $srcdir/${_pkgbase}rc/share/applications/julia.desktop
-  sed -i '2s/Julia/Julia\ Nightly/g' $srcdir/${_pkgbase}nt/share/applications/julia.desktop
-  sed -i '4s/julia/juliast/g' $srcdir/${_pkgbase}st/share/applications/julia.desktop
-  sed -i '4s/julia/juliarc/g' $srcdir/${_pkgbase}rc/share/applications/julia.desktop
-  sed -i '4s/julia/juliant/g' $srcdir/${_pkgbase}nt/share/applications/julia.desktop
-  mv $srcdir/${_pkgbase}st/share/applications/julia.desktop $srcdir/${_pkgbase}st/share/applications/juliast.desktop
-  mv $srcdir/${_pkgbase}rc/share/applications/julia.desktop $srcdir/${_pkgbase}st/share/applications/juliarc.desktop
-  mv $srcdir/${_pkgbase}nt/share/applications/julia.desktop $srcdir/${_pkgbase}st/share/applications/juliant.desktop
+  sed -i '2s/Julia/Julia\ Stable/g' $srcdir/${_name}st/share/applications/julia.desktop
+  sed -i '2s/Julia/Julia\ RC/g' $srcdir/${_name}rc/share/applications/julia.desktop
+  sed -i '2s/Julia/Julia\ Nightly/g' $srcdir/${_name}nt/share/applications/julia.desktop
+  sed -i '4s/julia/juliast/g' $srcdir/${_name}st/share/applications/julia.desktop
+  sed -i '4s/julia/juliarc/g' $srcdir/${_name}rc/share/applications/julia.desktop
+  sed -i '4s/julia/juliant/g' $srcdir/${_name}nt/share/applications/julia.desktop
+  mv $srcdir/${_name}st/share/applications/julia.desktop $srcdir/${_name}st/share/applications/juliast.desktop
+  mv $srcdir/${_name}rc/share/applications/julia.desktop $srcdir/${_name}st/share/applications/juliarc.desktop
+  mv $srcdir/${_name}nt/share/applications/julia.desktop $srcdir/${_name}st/share/applications/juliant.desktop
 
-  cp -r $srcdir/${_pkgbase}st/share/applications ${pkgdir}/usr/share/
-  cp -r $srcdir/${_pkgbase}rc/share/applications ${pkgdir}/usr/share/
-  cp -r $srcdir/${_pkgbase}nt/share/applications ${pkgdir}/usr/share/
+  cp -r $srcdir/${_name}st/share/applications ${pkgdir}/usr/share/
+  cp -r $srcdir/${_name}rc/share/applications ${pkgdir}/usr/share/
+  cp -r $srcdir/${_name}nt/share/applications ${pkgdir}/usr/share/
 
   rm -rf $pkgdir/usr/share/icons/hicolor/scalable
   for i in 16 32 128 256 512
