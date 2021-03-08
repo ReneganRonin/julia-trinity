@@ -2,10 +2,13 @@
 _name=julia
 pkgname=${_name}-trinity
 pkgver=20210305
-pkgrel=1
+pkgrel=2
 pkgdesc='High-level, high-performance, dynamic programming language - official binaries of Stable, RC, and Nightly'
 arch=('x86_64')
 provides=(julia-trinity)
+depends=(cblas fftw hicolor-icon-theme libgit2 libunwind libutf8proc openblas
+         suitesparse mbedtls openlibm pcre2 llvm10-libs)
+makedepends=(cmake gcc-fortran gmp python llvm10)
 conflicts=(julia julia-git julia-nightly-bin julia-bin julia-beta-bin)
 url='https://julialang.org/'
 licenses=('MIT')
@@ -22,9 +25,7 @@ noextract=(
 "$_name-1.6.0-rc1-linux-x86_64.tar.gz"
 "$_name-latest-linux64.tar.gz"
     )
-sha256sums=('f190c938dd6fed97021953240523c9db448ec0a6760b574afd4e9924ab5615f1'
-            '72847bd2b4d4db9d5970512f79fd5a7f76ad56cf0f2ea5a80eff032364b19c8b'
-            '99067f2045669cf4fa0009216637d52c9155223cb511aff458f243bc6d11f06e'
+sha256sums=('SKIP' 'SKIP' 'SKIP'
             '85aff59221938dd83aa3808910fb455c64f3f0936604bfaad7b8d27c01e3a7ed'
             '0310782968fe0ba2910e8a4fc3920ab58c0b8f91c66a66f6cff82cd0d6d31612'
             'aab27b427cb21108d831f2d9ddc89ce0948f7e8cb82e4bb2dc1bc82c6676224f'
@@ -37,45 +38,65 @@ pkgver() {
 }
 
 prepare() {
-  mkdir -p juliast  # stable
-  mkdir -p juliarc  # release candidate
-  mkdir -p juliant    # for nightly
-  tar -zxvf $_name-1.5.3-linux-x86_64.tar.gz -C juliast --strip-components=1  
-  tar -zxvf $_name-1.6.0-rc1-linux-x86_64.tar.gz -C juliarc --strip-components=1
-  tar -zxvf $_name-latest-linux64.tar.gz -C juliant --strip-components=1
+  mkdir -p julia-stable  # stable
+  mkdir -p julia-rc  # release candidate
+  mkdir -p julia-nightly  # for nightly
+  tar -zxvf $_name-1.5.3-linux-x86_64.tar.gz -C julia-stable --strip-components=1  
+  tar -zxvf $_name-1.6.0-rc1-linux-x86_64.tar.gz -C julia-rc --strip-components=1
+  tar -zxvf $_name-latest-linux64.tar.gz -C julia-nightly --strip-components=1
 }
 
 package() {
+	# Creating the necessary directories
+	install -d ${pkgdir}/usr
+  install -d ${pkgdir}/etc
+	install -d ${pkgdir}/usr/bin
+  install -d ${pkgdir}/usr/share/applications
+	install -d ${pkgdir}/usr/share/${pkgname}
+	install -d ${pkgdir}/usr/share/licenses/${pkgname}/${_name}-stable
+	install -d ${pkgdir}/usr/share/licenses/${pkgname}/${_name}-rc
+	install -d ${pkgdir}/usr/share/licenses/${pkgname}/${_name}-nightly
+	
+	
+	# Installing licenses
+	install -Dm644 $srcdir/${_name}-stable/LICENSE.md \
+		${pkgdir}/usr/share/licenses/${pkgname}/${_name}-stable/LICENSE.md
+	install -Dm644 $srcdir/${_name}-rc/LICENSE.md \
+		${pkgdir}/usr/share/licenses/${pkgname}/${_name}-rc/LICENSE.md
+	install -Dm644 $srcdir/${_name}-nightly/LICENSE.md \
+		${pkgdir}/usr/share/licenses/${pkgname}/${_name}-nightly/LICENSE.md	
+		
 
-  mkdir -p ${pkgdir}/usr/bin/
-  ln -s $srcdir/${_name}st/bin/julia ${pkgdir}/usr/bin/juliast
-  ln -s $srcdir/${_name}rc/bin/julia ${pkgdir}/usr/bin/juliarc
-  ln -s $srcdir/${_name}nt/bin/julia ${pkgdir}/usr/bin/juliant
-
-  cd $srcdir/${_name}nt
-  mkdir -p ${pkgdir}/usr/share/licenses/${_name}
-  install -Dm644 LICENSE.md \
-    ${pkgdir}/usr/share/licenses/${_name}/LICENSE.md
-
-  sed -i '2s/Julia/Julia\ Stable/g' $srcdir/${_name}st/share/applications/julia.desktop
-  sed -i '2s/Julia/Julia\ RC/g' $srcdir/${_name}rc/share/applications/julia.desktop
-  sed -i '2s/Julia/Julia\ Nightly/g' $srcdir/${_name}nt/share/applications/julia.desktop
-  sed -i '4s/julia/juliast/g' $srcdir/${_name}st/share/applications/julia.desktop
-  sed -i '4s/julia/juliarc/g' $srcdir/${_name}rc/share/applications/julia.desktop
-  sed -i '4s/julia/juliant/g' $srcdir/${_name}nt/share/applications/julia.desktop
-  mv $srcdir/${_name}st/share/applications/julia.desktop $srcdir/${_name}st/share/applications/juliast.desktop
-  mv $srcdir/${_name}rc/share/applications/julia.desktop $srcdir/${_name}st/share/applications/juliarc.desktop
-  mv $srcdir/${_name}nt/share/applications/julia.desktop $srcdir/${_name}st/share/applications/juliant.desktop
-
-  cp -r $srcdir/${_name}st/share/applications ${pkgdir}/usr/share/
-  cp -r $srcdir/${_name}rc/share/applications ${pkgdir}/usr/share/
-  cp -r $srcdir/${_name}nt/share/applications ${pkgdir}/usr/share/
-
+	# Copying source directories to /usr/
+  cp -rv $srcdir/${_name}-stable ${pkgdir}/usr/share/${pkgname}/${_name}-stable
+  cp -rv $srcdir/${_name}-rc ${pkgdir}/usr/share/${pkgname}/${_name}-rc
+  cp -rv $srcdir/${_name}-nightly ${pkgdir}/usr/share/${pkgname}/${_name}-nightly
+  	
+  	
+  # Symlinking and renaming binaries
+	ln -sv ${pkgdir}/usr/share/${pkgname}/${_name}-stable/bin/julia ${pkgdir}/usr/bin/julia-stable
+	ln -sv ${pkgdir}/usr/share/${pkgname}/${_name}-rc/bin/julia ${pkgdir}/usr/bin/julia-rc
+	ln -sv ${pkgdir}/usr/share/${pkgname}/${_name}-nightly/bin/julia ${pkgdir}/usr/bin/julia-nightly
+	
+	
+	# Creating the desktop application shortcuts
+	sed -i '2s/Julia/Julia\ Stable/g' ${pkgdir}/usr/share/${pkgname}/${_name}-stable/share/applications/julia.desktop
+  sed -i '2s/Julia/Julia\ RC/g' ${pkgdir}/usr/share/${pkgname}/${_name}-rc/share/applications/julia.desktop
+  sed -i '2s/Julia/Julia\ Nightly/g' ${pkgdir}/usr/share/${pkgname}/${_name}-nightly/share/applications/julia.desktop
+  sed -i '4s/julia/julia-stable/g' ${pkgdir}/usr/share/${pkgname}/${_name}-stable/share/applications/julia.desktop
+  sed -i '4s/julia/julia-rc/g' ${pkgdir}/usr/share/${pkgname}/${_name}-rc/share/applications/julia.desktop
+  sed -i '4s/julia/julia-nightly/g' ${pkgdir}/usr/share/${pkgname}/${_name}-nightly/share/applications/julia.desktop
+  cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-stable/share/applications/julia.desktop ${pkgdir}/usr/share/applications/julia-stable.desktop
+  cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-rc/share/applications/julia.desktop ${pkgdir}/usr/share/applications/julia-rc.desktop
+  cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-nightly/share/applications/julia.desktop ${pkgdir}/usr/share/applications/julia-nightly.desktop
+  	
+  # Cleaning up and installing icons
+  cp -r $srcdir/${_name}-stable/etc ${pkgdir}
   rm -rf $pkgdir/usr/share/icons/hicolor/scalable
   for i in 16 32 128 256 512
   do
     mkdir -p $pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/
-    install -Dm644 $srcdir/${i}x${i}.png $pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/julia.png
+		install -Dm644 $srcdir/${i}x${i}.png $pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/julia.png
   done
 }
 
