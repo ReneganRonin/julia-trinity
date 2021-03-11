@@ -74,9 +74,9 @@ package() {
   	
   	
   # Symlinking and renaming binaries
-	ln -sv ${pkgdir}/usr/share/${pkgname}/${_name}-stable/bin/julia ${pkgdir}/usr/bin/julia-stable
-	ln -sv ${pkgdir}/usr/share/${pkgname}/${_name}-rc/bin/julia ${pkgdir}/usr/bin/julia-rc
-	ln -sv ${pkgdir}/usr/share/${pkgname}/${_name}-nightly/bin/julia ${pkgdir}/usr/bin/julia-nightly
+	cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-stable/bin/julia ${pkgdir}/usr/bin/julia-stable
+	cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-rc/bin/julia ${pkgdir}/usr/bin/julia-rc
+	cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-nightly/bin/julia ${pkgdir}/usr/bin/julia-nightly
 	
 	
 	# Creating the desktop application shortcuts
