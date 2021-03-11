@@ -51,8 +51,6 @@ package() {
 	install -d ${pkgdir}/usr
   install -d ${pkgdir}/etc
 	install -d ${pkgdir}/usr/bin
-  install -d ${pkgdir}/usr/lib
-	install -d ${pkgdir}/usr/include
   install -d ${pkgdir}/usr/share/applications
 	install -d ${pkgdir}/usr/share/${pkgname}
 	install -d ${pkgdir}/usr/share/licenses/${pkgname}/${_name}-stable
