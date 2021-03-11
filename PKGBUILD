@@ -70,22 +70,9 @@ package() {
 		
 
 	# Copying source directories to /usr/
-  cp -rv $srcdir/${_name}-stable ${pkgdir}/usr/share/${pkgname}/${_name}-stable
-  cp -rv $srcdir/${_name}-rc ${pkgdir}/usr/share/${pkgname}/${_name}-rc
-  cp -rv $srcdir/${_name}-nightly ${pkgdir}/usr/share/${pkgname}/${_name}-nightly
-  	
-  	
-	cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-stable/bin/julia ${pkgdir}/usr/bin/julia-stable
-	cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-rc/bin/julia ${pkgdir}/usr/bin/julia-rc
-	cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-nightly/bin/julia ${pkgdir}/usr/bin/julia-nightly
-	
-	cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-stable/ {lib,include} ${pkgdir}/usr/
-	cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-rc/ {lib,include} ${pkgdir}/usr/
-	cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-nightly/ {lib,include} ${pkgdir}/usr/
-
-	# cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-stable/include ${pkgdir}/usr/bin/julia-stable
-	# cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-rc/include ${pkgdir}/usr/bin/julia-rc
-	# cp -rv ${pkgdir}/usr/share/${pkgname}/${_name}-nightly/include ${pkgdir}/usr/bin/julia-nightly
+  ln -sfv $srcdir/${_name}-stable ${pkgdir}/usr/share/${pkgname}/${_name}-stable
+  ln -sfv $srcdir/${_name}-rc ${pkgdir}/usr/share/${pkgname}/${_name}-rc
+  ln -sfv $srcdir/${_name}-nightly ${pkgdir}/usr/share/${pkgname}/${_name}-nightly
 	
 	# Creating the desktop application shortcuts
 	sed -i '2s/Julia/Julia\ Stable/g' ${pkgdir}/usr/share/${pkgname}/${_name}-stable/share/applications/julia.desktop
