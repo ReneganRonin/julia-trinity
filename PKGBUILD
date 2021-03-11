@@ -69,10 +69,10 @@ package() {
 		${pkgdir}/usr/share/licenses/${pkgname}/${_name}-nightly/LICENSE.md	
 		
 
-	# Copying source directories to /usr/
-  ln -sfv $srcdir/${_name}-stable ${pkgdir}/usr/share/${pkgname}/${_name}-stable
-  ln -sfv $srcdir/${_name}-rc ${pkgdir}/usr/share/${pkgname}/${_name}-rc
-  ln -sfv $srcdir/${_name}-nightly ${pkgdir}/usr/share/${pkgname}/${_name}-nightly
+  # Symlinking and renaming binaries
+	ln -sv ${pkgdir}/usr/share/${pkgname}/${_name}-stable/bin/julia ${pkgdir}/usr/bin/julia-stable
+  ln -sv ${pkgdir}/usr/share/${pkgname}/${_name}-rc/bin/julia ${pkgdir}/usr/bin/julia-rc
+	ln -sv ${pkgdir}/usr/share/${pkgname}/${_name}-nightly/bin/julia ${pkgdir}/usr/bin/julia-nightly
 	
 	# Creating the desktop application shortcuts
 	sed -i '2s/Julia/Julia\ Stable/g' ${pkgdir}/usr/share/${pkgname}/${_name}-stable/share/applications/julia.desktop
