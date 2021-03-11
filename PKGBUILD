@@ -1,8 +1,8 @@
 # Maintainer: ReneganRonin <renegan.ronin@gmail.com>
 _name=julia
 pkgname=${_name}-trinity
-pkgver=20210305
-pkgrel=2
+pkgver=20210311
+pkgrel=1
 pkgdesc='High-level, high-performance, dynamic programming language - official binaries of Stable, RC, and Nightly'
 arch=('x86_64')
 provides=(julia-trinity)
@@ -51,6 +51,8 @@ package() {
 	install -d ${pkgdir}/usr
   install -d ${pkgdir}/etc
 	install -d ${pkgdir}/usr/bin
+  install -d ${pkgdir}/usr/lib
+	install -d ${pkgdir}/usr/include
   install -d ${pkgdir}/usr/share/applications
 	install -d ${pkgdir}/usr/share/${pkgname}
 	install -d ${pkgdir}/usr/share/licenses/${pkgname}/${_name}-stable
